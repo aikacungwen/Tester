@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Upload Konten</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBatPrHKSKMKpf4BUxEGuds5inBz3LQPA4", // Ganti dengan apiKey kamu
+            authDomain: "databasetets-5bdab.firebaseapp.com", // Ganti dengan authDomain kamu
+            projectId: "databasetets-5bdab", // Ganti dengan projectId kamu
+            storageBucket: "databasetets-5bdab.appspot.com", // Ganti dengan storageBucket kamu
+            messagingSenderId: "939244180439", // Ganti dengan messagingSenderId kamu
+            appId: "1:939244180439:web:888c341448eb9dc99ef192", // Ganti dengan appId kamu
+            measurementId: "G-KM3K30DDPJ" // Ganti dengan measurementId kamu
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(); // Menyambungkan dengan Firestore
+
+        // Mendapatkan instance auth
+        const auth = firebase.auth();
+    </script>
+</head>
+<body>
+    <h2>Admin - Upload Konten</h2>
+
+    <!-- Form Upload Konten -->
+    <form id="content-form">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" placeholder="Masukkan judul" required><br><br>
+
+        <label for="content">Content:</label><br>
+        <textarea id="content" placeholder="Masukkan konten" required></textarea><br><br>
+
+        <label for="date">Date:</label><br>
+        <input type="text" id="date" placeholder="Masukkan tanggal" required><br><br>
+
+        <label for="link">Link:</label><br>
+        <input type="text" id="link" placeholder="Masukkan link" required><br><br>
+
+        <button type="submit">Upload</button>
+    </form>
+
+    <script>
+        const contentForm = document.getElementById('content-form');
+        contentForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Mendapatkan data dari form
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const date = document.getElementById('date').value;
+            const link = document.getElementById('link').value;
+
+            // Menyimpan data ke Firestore
+            db.collection('posts').add({
+                title: title,
+                content: content,
+                date: date,
+                link: link,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()  // Menambahkan timestamp otomatis
+            })
+            .then(() => {
+                alert('Konten berhasil di-upload!');
+                // Bisa tambahkan redirect atau reset form
+                contentForm.reset();
+            })
+            .catch((error) => {
+                console.error("Error uploading content: ", error);
+                alert('Gagal meng-upload konten.');
+            });
+        });
+    </script>
+</body>
+</html>
